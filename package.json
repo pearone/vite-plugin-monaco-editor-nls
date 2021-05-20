@@ -1,9 +1,9 @@
 {
-    "name": "rollup-plugin-monaco-editor-nls",
+    "name": "vite-plugin-monaco-editor-nls",
     "version": "1.0.1",
     "keyword": "rollup-plugin vite-plugin",
     "license": "MIT",
-    "repository": "https://github.com/pearone/rollup-plugin-monaco-editor-nls",
+    "repository": "https://github.com/pearone/vite-plugin-monaco-editor-nls",
     "files": [
         "dist"
     ],

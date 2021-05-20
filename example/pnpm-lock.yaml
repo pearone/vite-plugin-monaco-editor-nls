@@ -8,15 +8,15 @@ specifiers:
   monaco-editor: ^0.24.0
   react: ^17.0.0
   react-dom: ^17.0.0
-  rollup-plugin-monaco-editor-nls: link:..
   typescript: ^4.1.2
   vite: ^2.0.1
+  vite-plugin-monaco-editor-nls: link:..
 
 dependencies:
   monaco-editor: 0.24.0
   react: 17.0.1
   react-dom: 17.0.1_react@17.0.1
-  rollup-plugin-monaco-editor-nls: link:..
+  vite-plugin-monaco-editor-nls: link:..
 
 devDependencies:
   '@types/react': 17.0.3

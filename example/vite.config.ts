@@ -1,9 +1,7 @@
 import reactRefresh from '@vitejs/plugin-react-refresh';
 import {resolve} from 'path';
 import {defineConfig} from 'vite';
-import monacoEditorNlsPlugin, {
-    Languages,
-} from 'rollup-plugin-monaco-editor-nls';
+import monacoEditorNlsPlugin, {Languages} from 'vite-plugin-monaco-editor-nls';
 
 const prefix = `monaco-editor/esm/vs`;
 
