@@ -1,17 +1,15 @@
-# Rollup Plugin TSX Scoped CSS
+# Rollup Plugin monaco-editor-nls
 
 Install:
 
 ```shell
-yarn add -D rollup-plugin-tsx-scoped-css
+yarn add -D rollup-plugin-monaco-editor-nls
 ```
 
 Add this plugin in vite.config.ts：
 
 ```typescript
+import monacoEditorNlsPlugin from 'rollup-plugin-monaco-editor-nls';
 
-import scopedCss from 'rollup-plugin-tsx-scoped-css'
-
-
-plugins: [scopedCss()]
+plugins: [monacoEditorNlsPlugin()];
 ```
