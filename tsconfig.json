@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "lib": [
+            "esnext"
+        ],
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "outDir": "dist",
+        "strict": true,
+        "target": "esnext",
+        "module": "UMD",
+        "esModuleInterop": true
+    },
+    "include": [
+        "src"
+    ]
+}

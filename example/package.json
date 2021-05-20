@@ -1,0 +1,22 @@
+{
+    "name": "rollup-plugin-monaco-editor-nls-example",
+    "version": "0.0.0",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "serve": "vite preview"
+    },
+    "dependencies": {
+        "monaco-editor": "^0.24.0",
+        "react": "^17.0.0",
+        "react-dom": "^17.0.0"
+    },
+    "devDependencies": {
+        "@types/react": "^17.0.0",
+        "@types/react-dom": "^17.0.0",
+        "@vitejs/plugin-react-refresh": "^1.1.0",
+        "less": "^4.1.1",
+        "typescript": "^4.1.2",
+        "vite": "^2.0.1"
+    }
+}
