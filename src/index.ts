@@ -93,7 +93,7 @@ function getLocalizeCode(locale: Languages) {
 
     const CURRENT_LOCALE_DATA = fs.readFileSync(locale_data_path);
 
-    console.log(locale_data_path);
+    console.log(__dirname, locale_data_path);
     // console.log(JSON.parse(CURRENT_LOCALE_DATA.toString()));
 
     return `
