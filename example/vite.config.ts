@@ -21,7 +21,7 @@ export default defineConfig({
         ],
     },
     plugins: [
-        monacoEditorNlsPlugin({locale: 'zh-hans' as Languages}) as Plugin,
+        monacoEditorNlsPlugin({locale: 'zh-hans' as Languages}),
         reactRefresh(),
     ],
 });

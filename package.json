@@ -1,6 +1,6 @@
 {
     "name": "rollup-plugin-monaco-editor-nls",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "keyword": "rollup-plugin vite-plugin",
     "license": "MIT",
     "repository": "https://github.com/pearone/rollup-plugin-monaco-editor-nls",
@@ -12,9 +12,6 @@
         "build": "rimraf dist && tsc -p . && cp -rf ./src/locale dist/locale",
         "pub": "npm publish",
         "preinstall": "npx -y only-allow pnpm"
-    },
-    "dependencies": {
-        "vite": "^2.3.3"
     },
     "devDependencies": {
         "@types/node": "^15.3.0",

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import {Plugin} from 'vite';
+import {Plugin} from 'rollup';
 
 export enum Languages {
     bg = 'bg',
@@ -38,22 +38,20 @@ export default function (options: Options = {locale: Languages.es}): Plugin {
     return {
         name: 'rollup-plugin-monaco-editor-nls',
 
-        enforce: 'pre',
-
         /** 处理vite在esbuild情况下预编译生成chunk找不到nls替换文件 */
-        config: (config) => {
-            config.optimizeDeps = config.optimizeDeps
-                ? {
-                      ...config.optimizeDeps,
-                      exclude: config.optimizeDeps.exclude
-                          ? [...config.optimizeDeps.exclude, `monaco-editor`]
-                          : [`monaco-editor`],
-                  }
-                : {
-                      exclude: [`monaco-editor`],
-                  };
-            return config;
-        },
+        // config: (config) => {
+        //     config.optimizeDeps = config.optimizeDeps
+        //         ? {
+        //               ...config.optimizeDeps,
+        //               exclude: config.optimizeDeps.exclude
+        //                   ? [...config.optimizeDeps.exclude, `monaco-editor`]
+        //                   : [`monaco-editor`],
+        //           }
+        //         : {
+        //               exclude: [`monaco-editor`],
+        //           };
+        //     return config;
+        // },
 
         load(filepath) {
             if (/esm\/vs\/nls\.js/.test(filepath)) {
@@ -71,15 +69,18 @@ export default function (options: Options = {locale: Languages.es}): Plugin {
                 if (re.exec(filepath)) {
                     const path = RegExp.$1;
                     code = code.replace(/localize\(/g, `localize('${path}', `);
+                    const map = this.getCombinedSourcemap();
 
                     return {
                         code: code,
+                        map,
                     };
                 }
             }
 
             return {
                 code: code,
+                map: null,
             };
         },
     };
@@ -89,8 +90,6 @@ function getLocalizeCode(locale: Languages) {
     const locale_data_path = path.join(__dirname, `./locale/${locale}.json`);
 
     const CURRENT_LOCALE_DATA = fs.readFileSync(locale_data_path);
-
-    console.log(__dirname, locale_data_path);
 
     return `
         function _format(message, args) {
