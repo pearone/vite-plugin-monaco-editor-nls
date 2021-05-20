@@ -86,15 +86,11 @@ export default function (options: Options = {locale: Languages.es}): Plugin {
 }
 
 function getLocalizeCode(locale: Languages) {
-    const locale_data_path = path.join(
-        __dirname,
-        `../src/locale/${locale}.json`,
-    );
+    const locale_data_path = path.join(__dirname, `./locale/${locale}.json`);
 
     const CURRENT_LOCALE_DATA = fs.readFileSync(locale_data_path);
 
     console.log(__dirname, locale_data_path);
-    // console.log(JSON.parse(CURRENT_LOCALE_DATA.toString()));
 
     return `
         function _format(message, args) {
