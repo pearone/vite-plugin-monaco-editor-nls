@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import {Plugin} from 'vite';
+import MagicString from 'magic-string';
 
 export enum Languages {
     bg = 'bg',
@@ -29,12 +30,16 @@ export interface Options {
     locale: Languages;
 }
 
+const exclude_path = `monaco-editor/ems/vs`;
+
 /**
  * 使用了monaco-editor-nls的语言映射包，把原始localize(data, message)的方法，替换成了localize(path, data, defaultMessage)
  * @param options 替换语言包
  * @returns
  */
-export default function (options: Options = {locale: Languages.es}): Plugin {
+export default function (options: Options = {locale: Languages.en_gb}): Plugin {
+    const CURRENT_LOCALE_DATA = getLocalizeMapping(options.locale);
+
     return {
         name: 'rollup-plugin-monaco-editor-nls',
 
@@ -46,18 +51,18 @@ export default function (options: Options = {locale: Languages.es}): Plugin {
                 ? {
                       ...config.optimizeDeps,
                       exclude: config.optimizeDeps.exclude
-                          ? [...config.optimizeDeps.exclude, `monaco-editor`]
-                          : [`monaco-editor`],
+                          ? [...config.optimizeDeps.exclude, exclude_path]
+                          : [exclude_path],
                   }
                 : {
-                      exclude: [`monaco-editor`],
+                      exclude: [exclude_path],
                   };
             return config;
         },
 
         load(filepath) {
             if (/esm\/vs\/nls\.js/.test(filepath)) {
-                const code = getLocalizeCode(options.locale);
+                const code = getLocalizeCode(CURRENT_LOCALE_DATA);
                 return code;
             }
         },
@@ -68,28 +73,46 @@ export default function (options: Options = {locale: Languages.es}): Plugin {
                 !/esm\/vs\/.*nls\.js/.test(filepath)
             ) {
                 const re = /(?:monaco-editor\/esm\/)(.+)(?=\.js)/;
-                if (re.exec(filepath)) {
+                if (re.exec(filepath) && code.includes('localize(')) {
                     const path = RegExp.$1;
-                    code = code.replace(/localize\(/g, `localize('${path}', `);
+
+                    if (JSON.parse(CURRENT_LOCALE_DATA)[path]) {
+                        code = code.replace(
+                            /localize\(/g,
+                            `localize('${path}', `,
+                        );
+                    }
 
                     return {
                         code: code,
+                        map: new MagicString(code).generateMap({
+                            includeContent: true,
+                            hires: true,
+                            source: filepath,
+                        }),
                     };
                 }
             }
-
-            return {
-                code: code,
-            };
         },
     };
 }
 
-function getLocalizeCode(locale: Languages) {
+/**
+ * 获取语言包
+ * @param locale 语言
+ * @returns
+ */
+function getLocalizeMapping(locale: Languages) {
     const locale_data_path = path.join(__dirname, `./locale/${locale}.json`);
+    return fs.readFileSync(locale_data_path) as unknown as string;
+}
 
-    const CURRENT_LOCALE_DATA = fs.readFileSync(locale_data_path);
-
+/**
+ * 替换代码
+ * @param CURRENT_LOCALE_DATA 语言包
+ * @returns
+ */
+function getLocalizeCode(CURRENT_LOCALE_DATA: string) {
     return `
         function _format(message, args) {
             var result;

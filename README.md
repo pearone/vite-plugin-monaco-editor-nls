@@ -9,7 +9,7 @@ yarn add -D vite-plugin-monaco-editor-nls
 Add this plugin in vite.config.ts：
 
 ```typescript
-import monacoEditorNlsPlugin from 'vite-plugin-monaco-editor-nls';
+import monacoEditorNlsPlugin, {Languages} from 'vite-plugin-monaco-editor-nls';
 
-plugins: [monacoEditorNlsPlugin()];
+plugins: [monacoEditorNlsPlugin({locale: 'zh-hans' as Languages})];
 ```

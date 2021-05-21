@@ -18,6 +18,9 @@ export default defineConfig({
             `${prefix}/editor/editor.worker`,
         ],
     },
+    build: {
+        sourcemap: true,
+    },
     plugins: [
         monacoEditorNlsPlugin({locale: 'zh-hans' as Languages}),
         reactRefresh(),
