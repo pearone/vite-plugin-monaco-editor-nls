@@ -45,7 +45,8 @@ export default function (options: Options = {locale: Languages.en_gb}): Plugin {
 
         enforce: 'pre',
 
-        /** 处理vite在esbuild情况下预编译生成chunk找不到nls替换文件 */
+        /** 处理vite在esbuild情况下预编译会把monaco-editor的内容打包生成chunk，找不到nls文件名称做替换 */
+        /** 之前版本过滤了所有的monaco-editor的文件，解包后，会并发请求很多文件，更新到exclude_path，减少exclude的文件。 */
         config: (config) => {
             config.optimizeDeps = config.optimizeDeps
                 ? {
@@ -85,6 +86,7 @@ export default function (options: Options = {locale: Languages.en_gb}): Plugin {
 
                     return {
                         code: code,
+                        /** 使用magic-string 生成 source map */
                         map: new MagicString(code).generateMap({
                             includeContent: true,
                             hires: true,
