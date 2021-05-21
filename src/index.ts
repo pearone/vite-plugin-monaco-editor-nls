@@ -30,7 +30,7 @@ export interface Options {
     locale: Languages;
 }
 
-const exclude_path = `monaco-editor/ems/vs`;
+const exclude_path = `monaco-editor/esm/vs`;
 
 /**
  * 使用了monaco-editor-nls的语言映射包，把原始localize(data, message)的方法，替换成了localize(path, data, defaultMessage)
