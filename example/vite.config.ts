@@ -1,7 +1,10 @@
 import reactRefresh from '@vitejs/plugin-react-refresh';
 import {resolve} from 'path';
 import {defineConfig} from 'vite';
-import monacoEditorNlsPlugin, {Languages} from 'vite-plugin-monaco-editor-nls';
+import MonacoEditorNlsPlugin, {
+    esbuildPluginMonacoEditorNls,
+    Languages,
+} from 'vite-plugin-monaco-editor-nls';
 
 const prefix = `monaco-editor/esm/vs`;
 
@@ -12,17 +15,25 @@ export default defineConfig({
             '@': resolve('./src'),
         },
     },
+    build: {
+        sourcemap: true,
+    },
     optimizeDeps: {
         include: [
             `${prefix}/language/typescript/ts.worker`,
             `${prefix}/editor/editor.worker`,
         ],
-    },
-    build: {
-        sourcemap: true,
+        /** vite 版本需要大于等于2.3.0 */
+        esbuildOptions: {
+            plugins: [
+                esbuildPluginMonacoEditorNls({
+                    locale: 'zh-hans' as Languages,
+                }),
+            ],
+        },
     },
     plugins: [
-        monacoEditorNlsPlugin({locale: 'zh-hans' as Languages}),
         reactRefresh(),
+        MonacoEditorNlsPlugin({locale: 'zh-hans' as Languages}),
     ],
 });

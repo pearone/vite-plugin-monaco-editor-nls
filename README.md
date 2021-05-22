@@ -2,6 +2,8 @@
 
 Install:
 
+vite version >= 2.3.3
+
 ```shell
 yarn add -D vite-plugin-monaco-editor-nls
 ```

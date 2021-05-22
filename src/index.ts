@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import {Plugin} from 'vite';
 import MagicString from 'magic-string';
+import {Plugin as EsbuildPlugin} from 'esbuild';
 
 export enum Languages {
     bg = 'bg',
@@ -30,10 +31,46 @@ export interface Options {
     locale: Languages;
 }
 
-const exclude_path = `monaco-editor/esm/vs`;
+/**
+ * 在vite中dev模式下会使用esbuild对node_modules进行预编译，导致找不到映射表中的filepath，
+ * 需要在预编译之前进行替换
+ * @param options 替换语言包
+ * @returns
+ */
+export function esbuildPluginMonacoEditorNls(
+    options: Options = {locale: Languages.en_gb},
+): EsbuildPlugin {
+    const CURRENT_LOCALE_DATA = getLocalizeMapping(options.locale);
+
+    return {
+        name: 'esbuild-plugin-monaco-editor-nls',
+        setup(build) {
+            build.onLoad({filter: /esm\/vs\/nls\.js/}, async () => {
+                return {
+                    contents: getLocalizeCode(CURRENT_LOCALE_DATA),
+                    loader: 'js',
+                };
+            });
+
+            build.onLoad(
+                {filter: /monaco-editor[\\\/]esm[\\\/]vs.+\.js/},
+                async (args) => {
+                    return {
+                        contents: transformLocalizeFuncCode(
+                            args.path,
+                            CURRENT_LOCALE_DATA,
+                        ),
+                        loader: 'js',
+                    };
+                },
+            );
+        },
+    };
+}
 
 /**
  * 使用了monaco-editor-nls的语言映射包，把原始localize(data, message)的方法，替换成了localize(path, data, defaultMessage)
+ * vite build 模式下，使用rollup处理
  * @param options 替换语言包
  * @returns
  */
@@ -45,45 +82,27 @@ export default function (options: Options = {locale: Languages.en_gb}): Plugin {
 
         enforce: 'pre',
 
-        /** 处理vite在esbuild情况下预编译会把monaco-editor的内容打包生成chunk，找不到nls文件名称做替换 */
-        /** 之前版本过滤了所有的monaco-editor的文件，解包后，会并发请求很多文件，更新到exclude_path，减少exclude的文件。 */
-        config: (config) => {
-            config.optimizeDeps = config.optimizeDeps
-                ? {
-                      ...config.optimizeDeps,
-                      exclude: config.optimizeDeps.exclude
-                          ? [...config.optimizeDeps.exclude, exclude_path]
-                          : [exclude_path],
-                  }
-                : {
-                      exclude: [exclude_path],
-                  };
-            return config;
-        },
-
         load(filepath) {
             if (/esm\/vs\/nls\.js/.test(filepath)) {
                 const code = getLocalizeCode(CURRENT_LOCALE_DATA);
                 return code;
             }
         },
-
         transform(code, filepath) {
             if (
                 /monaco-editor[\\\/]esm[\\\/]vs.+\.js/.test(filepath) &&
                 !/esm\/vs\/.*nls\.js/.test(filepath)
             ) {
+                CURRENT_LOCALE_DATA;
                 const re = /(?:monaco-editor\/esm\/)(.+)(?=\.js)/;
                 if (re.exec(filepath) && code.includes('localize(')) {
                     const path = RegExp.$1;
-
                     if (JSON.parse(CURRENT_LOCALE_DATA)[path]) {
                         code = code.replace(
                             /localize\(/g,
                             `localize('${path}', `,
                         );
                     }
-
                     return {
                         code: code,
                         /** 使用magic-string 生成 source map */
@@ -97,6 +116,27 @@ export default function (options: Options = {locale: Languages.en_gb}): Plugin {
             }
         },
     };
+}
+
+/**
+ * 替换调用方法接口参数，替换成相应语言包语言
+ * @param filepath 路径
+ * @param CURRENT_LOCALE_DATA 替换规则
+ * @returns
+ */
+function transformLocalizeFuncCode(
+    filepath: string,
+    CURRENT_LOCALE_DATA: string,
+) {
+    let code = fs.readFileSync(filepath, 'utf8');
+    const re = /(?:monaco-editor\/esm\/)(.+)(?=\.js)/;
+    if (re.exec(filepath)) {
+        const path = RegExp.$1;
+        if (JSON.parse(CURRENT_LOCALE_DATA)[path]) {
+            code = code.replace(/localize\(/g, `localize('${path}', `);
+        }
+    }
+    return code;
 }
 
 /**
