@@ -1,4 +1,4 @@
-import '@/app.scoped.less';
+import '@/app.less';
 import React from 'react';
 import Editor from './editor';
 

@@ -27,13 +27,13 @@ export default defineConfig({
         esbuildOptions: {
             plugins: [
                 esbuildPluginMonacoEditorNls({
-                    locale: 'zh-hans' as Languages,
+                    locale: Languages.zh_hans,
                 }),
             ],
         },
     },
     plugins: [
         reactRefresh(),
-        MonacoEditorNlsPlugin({locale: 'zh-hans' as Languages}),
+        MonacoEditorNlsPlugin({locale: Languages.zh_hans}),
     ],
 });
