@@ -1,6 +1,6 @@
 {
     "name": "vite-plugin-monaco-editor-nls",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "keyword": "rollup-plugin vite-plugin",
     "license": "MIT",
     "repository": "https://github.com/pearone/vite-plugin-monaco-editor-nls",
@@ -13,8 +13,7 @@
     },
     "scripts": {
         "build": "rimraf dist && tsc -p . && cp -rf ./src/locale dist/locale",
-        "pub": "npm publish",
-        "preinstall": "npx -y only-allow pnpm"
+        "pub": "npm publish"
     },
     "devDependencies": {
         "@types/node": "^15.3.0",
