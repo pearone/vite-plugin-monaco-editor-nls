@@ -5,6 +5,7 @@ import MonacoEditorNlsPlugin, {
     esbuildPluginMonacoEditorNls,
     Languages,
 } from 'vite-plugin-monaco-editor-nls';
+import Inspect from 'vite-plugin-inspect';
 
 const prefix = `monaco-editor/esm/vs`;
 
@@ -34,6 +35,7 @@ export default defineConfig({
     },
     plugins: [
         reactRefresh(),
+        Inspect(),
         MonacoEditorNlsPlugin({locale: Languages.zh_hans}),
     ],
 });
