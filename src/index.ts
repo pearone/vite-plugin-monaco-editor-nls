@@ -51,7 +51,6 @@ export function esbuildPluginMonacoEditorNls(
                     loader: 'js',
                 };
             });
-
             build.onLoad(
                 {filter: /monaco-editor[\\\/]esm[\\\/]vs.+\.js/},
                 async (args) => {
@@ -132,9 +131,15 @@ function transformLocalizeFuncCode(
     const re = /(?:monaco-editor\/esm\/)(.+)(?=\.js)/;
     if (re.exec(filepath)) {
         const path = RegExp.$1;
-        if (JSON.parse(CURRENT_LOCALE_DATA)[path]) {
-            code = code.replace(/localize\(/g, `localize('${path}', `);
-        }
+
+        // if (filepath.includes('contextmenu')) {
+        //     console.log(filepath);
+        //     console.log(JSON.parse(CURRENT_LOCALE_DATA)[path]);
+        // }
+
+        // console.log(path, JSON.parse(CURRENT_LOCALE_DATA)[path]);
+
+        code = code.replace(/localize\(/g, `localize('${path}', `);
     }
     return code;
 }
@@ -169,16 +174,12 @@ function getLocalizeCode(CURRENT_LOCALE_DATA: string) {
             return result;
         }
 
-        export function localize(path, data, defaultMessage) {
+        export function localize(path, data, defaultMessage, ...args) {
             var key = typeof data === 'object' ? data.key : data;
             var data = ${CURRENT_LOCALE_DATA} || {};
             var message = (data[path] || {})[key];
             if (!message) {
                 message = defaultMessage;
-            }
-            var args = [];
-            for (var _i = 3; _i < arguments.length; _i++) {
-                args[_i - 3] = arguments[_i];
             }
             return _format(message, args);
         }
