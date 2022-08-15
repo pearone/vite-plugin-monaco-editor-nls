@@ -26,7 +26,7 @@ importers:
       '@types/react-dom': ^17.0.0
       '@vitejs/plugin-react-refresh': ^1.1.0
       less: ^4.1.1
-      monaco-editor: ^0.24.0
+      monaco-editor: ^0.34.0
       react: ^17.0.0
       react-dom: ^17.0.0
       typescript: ^4.1.2
@@ -34,7 +34,7 @@ importers:
       vite-plugin-inspect: ^0.6.0
       vite-plugin-monaco-editor-nls: workspace:*
     dependencies:
-      monaco-editor: 0.24.0
+      monaco-editor: 0.34.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     devDependencies:
@@ -1208,8 +1208,8 @@ packages:
       minimist: 1.2.6
     dev: true
 
-  /monaco-editor/0.24.0:
-    resolution: {integrity: sha512-o1f0Lz6ABFNTtnEqqqvlY9qzNx24rQZx1RgYNQ8SkWkE+Ka63keHH/RqxQ4QhN4fs/UYOnvAtEUZsPrzccH++A==}
+  /monaco-editor/0.34.0:
+    resolution: {integrity: sha512-VF+S5zG8wxfinLKLrWcl4WUizMx+LeJrG4PM/M78OhcwocpV0jiyhX/pG6Q9jIOhrb/ckYi6nHnaR5OojlOZCQ==}
     dev: false
 
   /mrmime/1.0.1:

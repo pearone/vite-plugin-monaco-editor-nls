@@ -95,7 +95,6 @@ export default function (options: Options = {locale: Languages.en_gb}): Plugin {
                 const re = /(?:monaco-editor\/esm\/)(.+)(?=\.js)/;
                 if (re.exec(filepath) && code.includes('localize(')) {
                     const path = RegExp.$1;
-                    console.log(filepath,path)
                     if (JSON.parse(CURRENT_LOCALE_DATA)[path]) {
                         code = code.replace(
                             /localize\(/g,
