@@ -168,16 +168,12 @@ function getLocalizeCode(CURRENT_LOCALE_DATA: string) {
             return result;
         }
 
-        export function localize(path, data, defaultMessage) {
+        export function localize(path, data, defaultMessage, ...args) {
             var key = typeof data === 'object' ? data.key : data;
             var data = ${CURRENT_LOCALE_DATA} || {};
             var message = (data[path] || {})[key];
             if (!message) {
                 message = defaultMessage;
-            }
-            var args = [];
-            for (var _i = 3; _i < arguments.length; _i++) {
-                args[_i - 3] = arguments[_i];
             }
             return _format(message, args);
         }
