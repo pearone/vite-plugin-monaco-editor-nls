@@ -1,5 +1,10 @@
 import React, {useEffect, useRef} from 'react';
 import * as monaco from 'monaco-editor';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+import TSWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 
 /**
  * 编辑器组件
@@ -33,24 +38,20 @@ function Editor() {
              * @param label - editor类型
              * @returns
              */
-            getWorkerUrl: function (_: number, label: string) {
-                let filename = '';
-
-                switch (label) {
-                    case 'javascript':
-                    case 'typescript':
-                        filename = `ts.worker.js`;
-                        break;
-                    default:
-                        filename = `editor.worker.js`;
+            getWorker(_: string, label: string) {
+                if (label === 'json') {
+                    return new JsonWorker()
                 }
-
-                const url = `https://wos2.58cdn.com.cn/MnOjIhGfMnSn/xinghuo/${filename}`;
-
-                // worker 不支持跨域，需要这样加载
-                return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
-                importScripts('${url}')
-            `)}`;
+                if (label === 'css' || label === 'scss' || label === 'less') {
+                    return new CssWorker()
+                }
+                if (label === 'html' || label === 'handlebars' || label === 'razor') {
+                    return new HtmlWorker()
+                }
+                if (label === 'typescript' || label === 'javascript') {
+                    return new TSWorker()
+                }
+                return new EditorWorker()
             },
         };
     };
@@ -71,13 +72,6 @@ const myrequire = require.config({
                 ...editor_option,
             });
 
-            editor.addCommand(
-                monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
-                () => {
-                    const value = editor.getValue();
-                    console.log(value);
-                },
-            );
 
             editor.onDidChangeModelContent(() => {
                 const value = editor.getValue();
