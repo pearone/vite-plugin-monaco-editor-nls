@@ -45,7 +45,7 @@ export function esbuildPluginMonacoEditorNls(
     return {
         name: 'esbuild-plugin-monaco-editor-nls',
         setup(build) {
-            build.onLoad({filter: /esm\/vs\/nls\.js/}, async () => {
+            build.onLoad({filter: /esm[\\\/]vs[\\\/]nls\.js/}, async () => {
                 return {
                     contents: getLocalizeCode(CURRENT_LOCALE_DATA),
                     loader: 'js',
@@ -76,27 +76,26 @@ export function esbuildPluginMonacoEditorNls(
  */
 export default function (options: Options = {locale: Languages.en_gb}): Plugin {
     const CURRENT_LOCALE_DATA = getLocalizeMapping(options.locale);
-
     return {
         name: 'rollup-plugin-monaco-editor-nls',
 
         enforce: 'pre',
 
         load(filepath) {
-            if (/esm\/vs\/nls\.js/.test(filepath)) {
-                const code = getLocalizeCode(CURRENT_LOCALE_DATA);
-                return code;
+            if (/esm[\\\/]vs[\\\/]nls\.js/.test(filepath)) {
+                return getLocalizeCode(CURRENT_LOCALE_DATA);
             }
         },
         transform(code, filepath) {
             if (
                 /monaco-editor[\\\/]esm[\\\/]vs.+\.js/.test(filepath) &&
-                !/esm\/vs\/.*nls\.js/.test(filepath)
+                !/esm[\\\/]vs[\\\/].*nls\.js/.test(filepath)
             ) {
                 CURRENT_LOCALE_DATA;
                 const re = /(?:monaco-editor\/esm\/)(.+)(?=\.js)/;
                 if (re.exec(filepath) && code.includes('localize(')) {
                     const path = RegExp.$1;
+                    console.log(filepath,path)
                     if (JSON.parse(CURRENT_LOCALE_DATA)[path]) {
                         code = code.replace(
                             /localize\(/g,
@@ -129,9 +128,10 @@ function transformLocalizeFuncCode(
     CURRENT_LOCALE_DATA: string,
 ) {
     let code = fs.readFileSync(filepath, 'utf8');
-    const re = /(?:monaco-editor\/esm\/)(.+)(?=\.js)/;
+    const re = /(?:monaco-editor[\\\/]esm[\\\/])(.+)(?=\.js)/;
     if (re.exec(filepath)) {
-        const path = RegExp.$1;
+        let path = RegExp.$1;
+        path = path.replaceAll('\\','/')
         if (JSON.parse(CURRENT_LOCALE_DATA)[path]) {
             code = code.replace(/localize\(/g, `localize('${path}', `);
         }

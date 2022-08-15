@@ -7,10 +7,9 @@ import MonacoEditorNlsPlugin, {
 } from 'vite-plugin-monaco-editor-nls';
 import Inspect from 'vite-plugin-inspect';
 
-const prefix = `monaco-editor/esm/vs`;
-
 // https://vitejs.dev/config/
 export default defineConfig({
+    base: './',
     resolve: {
         alias: {
             '@': resolve('./src'),
@@ -20,10 +19,6 @@ export default defineConfig({
         sourcemap: true,
     },
     optimizeDeps: {
-        include: [
-            `${prefix}/language/typescript/ts.worker`,
-            `${prefix}/editor/editor.worker`,
-        ],
         /** vite 版本需要大于等于2.3.0 */
         esbuildOptions: {
             plugins: [
