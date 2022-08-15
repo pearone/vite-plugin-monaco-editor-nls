@@ -25,6 +25,7 @@ importers:
       '@types/react': ^17.0.0
       '@types/react-dom': ^17.0.0
       '@vitejs/plugin-react-refresh': ^1.1.0
+      cross-env: ^7.0.3
       less: ^4.1.1
       monaco-editor: ^0.34.0
       react: ^17.0.0
@@ -33,21 +34,22 @@ importers:
       vite: 3.0.4
       vite-plugin-inspect: ^0.6.0
       vite-plugin-monaco-editor-nls: workspace:*
-      vscode-loc.git: github:microsoft/vscode-loc
+      vscode-loc.git: git+https://jihulab.com/james-curtis/vscode-loc.git
     dependencies:
       monaco-editor: 0.34.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-      vscode-loc.git: github.com/microsoft/vscode-loc/ba1c490723a7774c5f9b6cbcebf74f73bcf88651
     devDependencies:
       '@types/react': 17.0.48
       '@types/react-dom': 17.0.17
       '@vitejs/plugin-react-refresh': 1.3.6
+      cross-env: 7.0.3
       less: 4.1.3
       typescript: 4.2.4
       vite: 3.0.4_less@4.1.3
       vite-plugin-inspect: 0.6.0_vite@3.0.4
       vite-plugin-monaco-editor-nls: link:..
+      vscode-loc.git: jihulab.com/james-curtis/vscode-loc/ba1c490723a7774c5f9b6cbcebf74f73bcf88651
 
 packages:
 
@@ -506,6 +508,23 @@ packages:
 
   /core-util-is/1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
+    dev: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
+    dev: true
+
+  /cross-spawn/7.0.3:
+    resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
+    engines: {node: '>= 8'}
+    dependencies:
+      path-key: 3.1.1
+      shebang-command: 2.0.0
+      which: 2.0.2
     dev: true
 
   /csstype/3.1.0:
@@ -1283,6 +1302,11 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /path-key/3.1.1:
+    resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
+    engines: {node: '>=8'}
+    dev: true
+
   /path-parse/1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
     dev: true
@@ -1430,6 +1454,18 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       to-object-path: 0.3.0
+    dev: true
+
+  /shebang-command/2.0.0:
+    resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
+    engines: {node: '>=8'}
+    dependencies:
+      shebang-regex: 3.0.0
+    dev: true
+
+  /shebang-regex/3.0.0:
+    resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
+    engines: {node: '>=8'}
     dev: true
 
   /sirv/2.0.2:
@@ -1652,6 +1688,14 @@ packages:
       isexe: 2.0.0
     dev: true
 
+  /which/2.0.2:
+    resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
+    engines: {node: '>= 8'}
+    hasBin: true
+    dependencies:
+      isexe: 2.0.0
+    dev: true
+
   /wrappy/1.0.2:
     resolution: {integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=}
     dev: true
@@ -1661,8 +1705,8 @@ packages:
     engines: {node: '>=0.4'}
     dev: true
 
-  github.com/microsoft/vscode-loc/ba1c490723a7774c5f9b6cbcebf74f73bcf88651:
-    resolution: {tarball: https://codeload.github.com/microsoft/vscode-loc/tar.gz/ba1c490723a7774c5f9b6cbcebf74f73bcf88651}
+  jihulab.com/james-curtis/vscode-loc/ba1c490723a7774c5f9b6cbcebf74f73bcf88651:
+    resolution: {commit: ba1c490723a7774c5f9b6cbcebf74f73bcf88651, repo: https://jihulab.com/james-curtis/vscode-loc.git, type: git}
     name: vscode-loc.git
     version: 0.0.0
-    dev: false
+    dev: true

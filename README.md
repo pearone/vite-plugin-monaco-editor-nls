@@ -43,13 +43,24 @@ export default defineConfig({
 });
 ```
 
+Joying it
+
+```shell
+pnpm run example
+```
+
+
 ### Using custom locale
 
 > It dependency on [vscode-loc](https://github.com/microsoft/vscode-loc) to get the locales.
 
 - First
 
-`npm install git+ssh://git@github.com:microsoft/vscode-loc.git`
+`pnpm add -D git+https://github.com/microsoft/vscode-loc.git`
+
+> If this is slow, you can try to copy a copy using gitlab.
+> 
+> like this `pnpm add -D git+https://jihulab.com/james-curtis/vscode-loc`
 
 - Then
 
