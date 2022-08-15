@@ -7,10 +7,10 @@
         "serve": "vite preview"
     },
     "dependencies": {
-        "monaco-editor": "^0.33.0",
+        "monaco-editor": "^0.34.0",
         "react": "^17.0.0",
         "react-dom": "^17.0.0",
-        "vite-plugin-monaco-editor-nls": "link:.."
+        "vscode-loc.git": "github:microsoft/vscode-loc"
     },
     "devDependencies": {
         "@types/react": "^17.0.0",
@@ -19,6 +19,7 @@
         "less": "^4.1.1",
         "typescript": "^4.1.2",
         "vite": "3.0.4",
-        "vite-plugin-inspect": "^0.6.0"
+        "vite-plugin-inspect": "^0.6.0",
+        "vite-plugin-monaco-editor-nls": "workspace:*"
     }
 }
