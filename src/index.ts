@@ -76,6 +76,7 @@ export function esbuildPluginMonacoEditorNls(
  */
 export default function (options: Options = {locale: Languages.en_gb}): Plugin {
     const CURRENT_LOCALE_DATA = getLocalizeMapping(options.locale);
+
     return {
         name: 'rollup-plugin-monaco-editor-nls',
 
@@ -129,11 +130,16 @@ function transformLocalizeFuncCode(
     let code = fs.readFileSync(filepath, 'utf8');
     const re = /(?:monaco-editor[\\\/]esm[\\\/])(.+)(?=\.js)/;
     if (re.exec(filepath)) {
-        let path = RegExp.$1;
-        path = path.replaceAll('\\','/')
-        if (JSON.parse(CURRENT_LOCALE_DATA)[path]) {
-            code = code.replace(/localize\(/g, `localize('${path}', `);
-        }
+        const path = RegExp.$1;
+
+        // if (filepath.includes('contextmenu')) {
+        //     console.log(filepath);
+        //     console.log(JSON.parse(CURRENT_LOCALE_DATA)[path]);
+        // }
+
+        // console.log(path, JSON.parse(CURRENT_LOCALE_DATA)[path]);
+
+        code = code.replace(/localize\(/g, `localize('${path}', `);
     }
     return code;
 }
