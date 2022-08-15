@@ -7,6 +7,8 @@ import MonacoEditorNlsPlugin, {
 } from 'vite-plugin-monaco-editor-nls';
 import Inspect from 'vite-plugin-inspect';
 
+const zh_CN = require('vscode-loc.git/i18n/vscode-language-pack-zh-hans/translations/main.i18n.json')
+
 // https://vitejs.dev/config/
 export default defineConfig({
     base: './',
@@ -24,6 +26,7 @@ export default defineConfig({
             plugins: [
                 esbuildPluginMonacoEditorNls({
                     locale: Languages.zh_hans,
+                    localeData: zh_CN.contents
                 }),
             ],
         },
@@ -31,6 +34,9 @@ export default defineConfig({
     plugins: [
         reactRefresh(),
         Inspect(),
-        MonacoEditorNlsPlugin({locale: Languages.zh_hans}),
+        MonacoEditorNlsPlugin({
+            locale: Languages.zh_hans,
+            localeData: zh_CN.contents
+        }),
     ],
 });

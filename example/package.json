@@ -9,7 +9,8 @@
     "dependencies": {
         "monaco-editor": "^0.34.0",
         "react": "^17.0.0",
-        "react-dom": "^17.0.0"
+        "react-dom": "^17.0.0",
+        "vscode-loc.git": "github:microsoft/vscode-loc"
     },
     "devDependencies": {
         "@types/react": "^17.0.0",

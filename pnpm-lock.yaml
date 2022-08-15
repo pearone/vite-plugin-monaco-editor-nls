@@ -33,10 +33,12 @@ importers:
       vite: 3.0.4
       vite-plugin-inspect: ^0.6.0
       vite-plugin-monaco-editor-nls: workspace:*
+      vscode-loc.git: github:microsoft/vscode-loc
     dependencies:
       monaco-editor: 0.34.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      vscode-loc.git: github.com/microsoft/vscode-loc/ba1c490723a7774c5f9b6cbcebf74f73bcf88651
     devDependencies:
       '@types/react': 17.0.48
       '@types/react-dom': 17.0.17
@@ -1658,3 +1660,9 @@ packages:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
     dev: true
+
+  github.com/microsoft/vscode-loc/ba1c490723a7774c5f9b6cbcebf74f73bcf88651:
+    resolution: {tarball: https://codeload.github.com/microsoft/vscode-loc/tar.gz/ba1c490723a7774c5f9b6cbcebf74f73bcf88651}
+    name: vscode-loc.git
+    version: 0.0.0
+    dev: false
