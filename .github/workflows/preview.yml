@@ -43,10 +43,14 @@ jobs:
         run: pnpm i --frozen-lockfile
 
       - name: Build vite plugin
-        run: pnpm run build
+        run: |
+            export NODE_OPTIONS="--max_old_space_size=4096"
+            pnpm run build
 
       - name: Build example
-        run: pnpm -C example build
+        run: |
+            export NODE_OPTIONS="--max_old_space_size=4096"
+            pnpm -C example build
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.4.0

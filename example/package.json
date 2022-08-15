@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "scripts": {
         "dev": "vite",
-        "build": "tsc && cross-env --max_old_space_size=4096 vite build",
+        "build": "tsc && vite build",
         "serve": "vite preview"
     },
     "dependencies": {
