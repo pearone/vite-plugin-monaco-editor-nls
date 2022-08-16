@@ -13,7 +13,8 @@
     },
     "scripts": {
         "build": "rimraf dist && tsc -p . && pnpm exec copy src/locale/* dist/locale",
-        "pub": "npm publish"
+        "pub": "npm publish",
+        "example": "pnpm run build && pnpm -C example build"
     },
     "devDependencies": {
         "@types/node": "^15.3.0",

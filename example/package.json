@@ -9,17 +9,18 @@
     "dependencies": {
         "monaco-editor": "^0.34.0",
         "react": "^17.0.0",
-        "react-dom": "^17.0.0",
-        "vscode-loc.git": "github:microsoft/vscode-loc"
+        "react-dom": "^17.0.0"
     },
     "devDependencies": {
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@vitejs/plugin-react-refresh": "^1.1.0",
+        "cross-env": "^7.0.3",
         "less": "^4.1.1",
         "typescript": "^4.1.2",
         "vite": "3.0.4",
         "vite-plugin-inspect": "^0.6.0",
-        "vite-plugin-monaco-editor-nls": "workspace:*"
+        "vite-plugin-monaco-editor-nls": "workspace:*",
+        "vscode-loc.git": "git+https://jihulab.com/james-curtis/vscode-loc.git"
     }
 }
