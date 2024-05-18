@@ -75,7 +75,7 @@ export function esbuildPluginMonacoEditorNls(
  * @param options 替换语言包
  * @returns
  */
-export default function (options: Options = {locale: Languages.en_gb}): Plugin {
+export default function MonacoEditorNlsPlugin(options: Options = {locale: Languages.en_gb}): Plugin {
     const CURRENT_LOCALE_DATA = getLocalizeMapping(options.locale,options.localeData);
 
     return {
@@ -103,6 +103,7 @@ export default function (options: Options = {locale: Languages.en_gb}): Plugin {
                             /localize\(/g,
                             `localize("${path}", `,
                         );
+                        code = code.replace(/localize2\(/g, `localize2('${path}', `);
                     }
                     return {
                         code: code,
@@ -170,15 +171,7 @@ function getLocalizeCode(CURRENT_LOCALE_DATA: string) {
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
+
 let isPseudo = (typeof document !== 'undefined' && document.location && document.location.hash.indexOf('pseudo=true') >= 0);
 const DEFAULT_TAG = 'i-default';
 function _format(message, args) {
@@ -223,22 +216,26 @@ function endWithSlash(path) {
     }
     return path + '/';
 }
-function getMessagesFromTranslationsService(translationServiceUrl, language, name) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const url = endWithSlash(translationServiceUrl) + endWithSlash(language) + 'vscode/' + endWithSlash(name);
-        const res = yield fetch(url);
-        if (res.ok) {
-            const messages = yield res.json();
-            return messages;
-        }
-        throw new Error(\`\${res.status} - \${res.statusText}\`);
-    });
+async function getMessagesFromTranslationsService(translationServiceUrl, language, name) {
+    const url = endWithSlash(translationServiceUrl) + endWithSlash(language) + 'vscode/' + endWithSlash(name);
+    const res = await fetch(url);
+    if (res.ok) {
+        const messages = await res.json();
+        return messages;
+    }
+    throw new Error(\`\${res.status} - \${res.statusText}\`);
 }
 function createScopedLocalize(scope) {
     return function (idx, defaultValue) {
         const restArgs = Array.prototype.slice.call(arguments, 2);
         return _format(scope[idx], restArgs);
     };
+}
+function createScopedLocalize2(scope) {
+    return (idx, defaultValue, ...args) => ({
+        value: _format(scope[idx], args),
+        original: _format(defaultValue, args)
+    });
 }
 // export function localize(data, message, ...args) {
 //     return _format(message, args);
@@ -255,6 +252,19 @@ function createScopedLocalize(scope) {
         }
 // ------------------------invoke----------------------------------------
 
+export function localize2(path, data, defaultMessage, ...args) {
+            var key = typeof data === 'object' ? data.key : data;
+            var data = ${CURRENT_LOCALE_DATA} || {};
+            var message = (data[path] || {})[key];
+            if (!message) {
+                message = defaultMessage;
+            }
+            const original = _format(message, args);
+               return {
+                value: original,
+        original
+    };
+}
 export function getConfiguredDefaultLocale(_) {
     // This returns undefined because this implementation isn't used and is overwritten by the loader
     // when loaded.
@@ -270,6 +280,7 @@ export function create(key, data) {
     var _a;
     return {
         localize: createScopedLocalize(data[key]),
+        localize2: createScopedLocalize2(data[key]),
         getConfiguredDefaultLocale: (_a = data.getConfiguredDefaultLocale) !== null && _a !== void 0 ? _a : ((_) => undefined)
     };
 }
@@ -282,6 +293,7 @@ export function load(name, req, load, config) {
     if (!name || name.length === 0) {
         return load({
             localize: localize,
+            localize2: localize2,
             getConfiguredDefaultLocale: () => { var _a; return (_a = pluginConfig.availableLanguages) === null || _a === void 0 ? void 0 : _a['*']; }
         });
     }
@@ -294,9 +306,11 @@ export function load(name, req, load, config) {
     const messagesLoaded = (messages) => {
         if (Array.isArray(messages)) {
             messages.localize = createScopedLocalize(messages);
+            messages.localize2 = createScopedLocalize2(messages);
         }
         else {
             messages.localize = createScopedLocalize(messages[name]);
+            messages.localize2 = createScopedLocalize2(messages[name]);
         }
         messages.getConfiguredDefaultLocale = () => { var _a; return (_a = pluginConfig.availableLanguages) === null || _a === void 0 ? void 0 : _a['*']; };
         load(messages);
@@ -313,10 +327,10 @@ export function load(name, req, load, config) {
         });
     }
     else if (pluginConfig.translationServiceUrl && !useDefaultLanguage) {
-        (() => __awaiter(this, void 0, void 0, function* () {
-            var _b;
+        (async () => {
+            var _a;
             try {
-                const messages = yield getMessagesFromTranslationsService(pluginConfig.translationServiceUrl, language, name);
+                const messages = await getMessagesFromTranslationsService(pluginConfig.translationServiceUrl, language, name);
                 return messagesLoaded(messages);
             }
             catch (err) {
@@ -330,9 +344,9 @@ export function load(name, req, load, config) {
                     // Since we were unable to load the specific language, try to load the generic language. Ex. we failed to find a
                     // Swiss German (de-CH), so try to load the generic German (de) messages instead.
                     const genericLanguage = language.split('-')[0];
-                    const messages = yield getMessagesFromTranslationsService(pluginConfig.translationServiceUrl, genericLanguage, name);
+                    const messages = await getMessagesFromTranslationsService(pluginConfig.translationServiceUrl, genericLanguage, name);
                     // We got some messages, so we configure the configuration to use the generic language for this session.
-                    (_b = pluginConfig.availableLanguages) !== null && _b !== void 0 ? _b : (pluginConfig.availableLanguages = {});
+                    (_a = pluginConfig.availableLanguages) !== null && _a !== void 0 ? _a : (pluginConfig.availableLanguages = {});
                     pluginConfig.availableLanguages['*'] = genericLanguage;
                     return messagesLoaded(messages);
                 }
@@ -341,7 +355,7 @@ export function load(name, req, load, config) {
                     return req([name + '.nls'], messagesLoaded);
                 }
             }
-        }))();
+        })();
     }
     else {
         req([name + suffix], messagesLoaded, (err) => {
